@@ -1,6 +1,6 @@
-import slugify from 'slugify';
-import { valueToSemester } from '../lib/mapper.js';
-import type { Course, DepartmentImport } from '../types.js';
+import slugify from "slugify";
+import { valueToSemester } from "../lib/mapper.js";
+import type { Course, DepartmentImport } from "../types.js";
 
 /**
  * Parse JSON data representing index files.
@@ -12,7 +12,7 @@ export function parseJson(input: string): Array<DepartmentImport> {
   try {
     parsed = JSON.parse(input);
   } catch (e) {
-    console.error('error parsing JSON', e);
+    console.error("error parsing JSON", e);
     return [];
   }
 
@@ -24,7 +24,7 @@ export function parseJson(input: string): Array<DepartmentImport> {
   for (const i of parsed) {
     const item = i as Partial<DepartmentImport>;
     if (!item.title || !item.description || !item.csv) {
-      console.warn('missing required properties in JSON');
+      console.warn("missing required properties in JSON");
     } else {
       items.push({
         title: item.title,
@@ -38,8 +38,7 @@ export function parseJson(input: string): Array<DepartmentImport> {
   return items;
 }
 
-function parseLine(line: string): Omit<Course, 'id'> | null {
-
+function parseLine(line: string): Omit<Course, "id"> | null {
   const [
     id = undefined,
     title = undefined,
@@ -47,33 +46,32 @@ function parseLine(line: string): Omit<Course, 'id'> | null {
     lineSemester = undefined,
     lineLevel = undefined,
     lineUrl = undefined,
-  ] = line.split(';');
-  
-  const formattedUnits = (lineUnits ?? '').replace(/\./g, '').replace(',', '.');
+  ] = line.split(";");
+
+  const formattedUnits = (lineUnits ?? "").replace(/\./g, "").replace(",", ".");
   const parsedUnits = Number.parseFloat(formattedUnits);
   const units =
-    (lineUnits ?? '').indexOf('.') < 0 &&
+    (lineUnits ?? "").indexOf(".") < 0 &&
     !Number.isNaN(parsedUnits) &&
     formattedUnits === parsedUnits.toString()
       ? parsedUnits
       : undefined;
 
-      const semester = lineSemester ? valueToSemester(lineSemester) : '';
-
+  const semester = lineSemester ? valueToSemester(lineSemester) : "";
 
   const level =
-    typeof lineLevel === 'string' && lineLevel.length ? lineLevel : undefined;
+    typeof lineLevel === "string" && lineLevel.length ? lineLevel : undefined;
 
   let url;
 
   try {
-    url = new URL(lineUrl ?? '').href;
+    url = new URL(lineUrl ?? "").href;
   } catch (e) {
     // do nothing if URL is invalid
   }
 
   if (!id || !title || !semester) {
-   /* 
+    /* 
     console.warn(`missing required properties`, {
       id: Boolean(id),
       title: Boolean(title),
@@ -104,7 +102,7 @@ export function parseCsv(data: string) {
   }
 
   const courses = [];
-  const lines = data.split('\n').slice(1);
+  const lines = data.split("\n").slice(1);
 
   for (const line of lines) {
     const parsed = parseLine(line);
