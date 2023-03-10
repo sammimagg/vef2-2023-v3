@@ -1,5 +1,10 @@
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'semester') THEN
+    CREATE TYPE semester AS ENUM ('Vor','Sumar','Haust','Heilsárs');
+  END IF;
+END $$;
 
-CREATE TYPE semester AS ENUM ('Sumar','Vor','Haust','Vetur');
 CREATE TABLE public.department (
     id SERIAL PRIMARY KEY,
     title VARCHAR(64) NOT NULL UNIQUE,
@@ -8,6 +13,7 @@ CREATE TABLE public.department (
     created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
 
 CREATE TABLE public.courses (
     id SERIAL PRIMARY KEY,
