@@ -185,6 +185,5 @@ export async function getCourseInDepartmentFromDb(deparmentId:  number ) {
   const values = [deparmentId];
   const result = await query(q,values);
   const courses = coursesMapper(result);
-  console.log(courses)
   return courses
 }

@@ -1,13 +1,23 @@
 import express, { Request,Response,NextFunction } from 'express';
 import { router } from './routes/api.js';
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const {
+  PORT: port = 3000,
+  SESSION_SECRET: sessionSecret,
+  DATABASE_URL: connectionString,
+} = process.env;
+if (!connectionString || !sessionSecret) {
+  console.error("Vantar gögn í env");
+  process.exit(1);
+}
 
 
 const app = express();
 app.use(express.json());
 app.use(router);
-
-
-const port = 3000;
 
 
 
